@@ -1,0 +1,12 @@
+Bootstrap-Flask==2.2.0
+email-validator==2.0.0.post2
+Flask==2.3.2
+Flask-CKEditor==0.4.6
+Flask-Gravatar==0.5.0
+Flask-Login==0.6.2
+Flask-SQLAlchemy==3.0.3
+Flask-WTF==1.1.1
+python-dotenv==1.0.0
+SQLAlchemy==2.0.13
+Werkzeug~=2.3.4
+WTForms~=3.0.1

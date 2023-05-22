@@ -8,21 +8,25 @@ from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from forms import CreatePostForm, UserRegisterForm, Login, CommentForm
 from functools import wraps
+from dotenv import load_dotenv
+import os
 
+# Load variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 ckeditor = CKEditor(app)
 Bootstrap4(app)
 
-
-# CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+# Connect to db
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-# CONFIGURE TABLES
+# configure tables
+####################################################################
 class User(UserMixin, db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
@@ -57,7 +61,9 @@ class Comment(db.Model):
     parent_post = relationship('BlogPost', back_populates='comments')
 
 
-# CONFIGURE LOGIN MANAGER
+######################################################################
+
+# Configure login manager
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.login_message = 'Invalid. Please login in to access that page.'
@@ -78,6 +84,7 @@ def admin_only(f):
             return abort(403)
         # Otherwise continue with the route function
         return f(*args, **kwargs)
+
     return decorated_function
 
 
@@ -144,7 +151,7 @@ def logout():
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def show_post(post_id):
     form = CommentForm()
-    requested_post = db.session.get(BlogPost,post_id)
+    requested_post = db.session.get(BlogPost, post_id)
     if form.validate_on_submit():
         # Checks if the current user is logged in and lets they make a comment if that's the case
         if current_user.is_authenticated:
