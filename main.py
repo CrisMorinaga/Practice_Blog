@@ -105,7 +105,7 @@ def register():
         email = user_registration_form.email.data
         password = user_registration_form.password.data
         name = user_registration_form.name.data
-        img_url = 'https://picsum.photos/600/400'
+        img_url = 'https://picsum.photos/500/500'
         user_data = User.query.filter_by(email=email).first()
         # Checks if the email is not in the database and creates a new user if that's the case
         if user_data is None:
